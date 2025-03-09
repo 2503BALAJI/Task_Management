@@ -29,6 +29,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 py-10">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6">
+        
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">📝 Task Management</h1>
 
         {/* Add Task Section */}

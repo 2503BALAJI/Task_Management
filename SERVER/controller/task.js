@@ -55,56 +55,56 @@ exports.getAllTask = async (req,res)=>{
    
 };
 
-// update the Task 
-exports.updateTask=async(req,res)=>{
+// Update the Task 
+exports.updateTask = async (req, res) => {
     try {
-        // fetch the task by id 
-        const id = req.params.id; // Get task ID from URL params
-        const{title,description} =req.body;
+        // Fetch the task ID from URL params
+        const id = req.params.id;
+        const { title, description, status } = req.body; // Now including `status`
         
-        console.log("getting id from params -->", req.params.id);
+        console.log("Getting ID from params -->", id);
 
-        // id id is not preset
-        if(!id){
+        // If ID is not present
+        if (!id) {
             return res.status(400).json({
                 success: false,
-                message: "Task ID is required --> id is not present in Params",
+                message: "Task ID is required --> ID is not present in Params",
             });
-        };
+        }
 
-        // check id is present in the db or not 
+        // Check if task exists in the database
         const existing_task = await Task.findById(id);
-        if(!existing_task){
-            res.status(400).json({
-                success:false,
-                message:"Given Id is not present in Db "
-            })
-        };
-        // if title is present in request body then change the title --> if not then remain unchange the title 
+        if (!existing_task) {
+            return res.status(400).json({
+                success: false,
+                message: "Given ID is not present in the database",
+            });
+        }
+
+        // Update fields if provided in the request body
         existing_task.title = title || existing_task.title;
         existing_task.description = description || existing_task.description;
-     // if description  is present in request body then change the description --> if not then remain unchange the description 
+        existing_task.status = status || existing_task.status; // ✅ Now handling `status`
 
+        // Save the updated task in the database
+        const updatedTask = await existing_task.save();
 
-     // save the data in db 
-     const updatedTask = await existing_task.save();
-     res.status(200).json({
-        success: true,
-        message: "Task updated successfully",
-        task: updatedTask,       // Send updated task in response
-    });
-        
+        // Send response
+        res.status(200).json({
+            success: true,
+            message: "Task updated successfully",
+            task: updatedTask, // Sending updated task in response
+        });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({
-            success:false,
-            message:"Error in Updating the task",
-        })
+            success: false,
+            message: "Error in updating the task",
+        });
     }
-    
-
-
 };
+
 
 // delete the task 
 exports.deleteTask = async(req,res)=>{

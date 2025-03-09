@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const TaskSchema = new mongoose.Schema({
@@ -9,15 +10,16 @@ const TaskSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    completed:{
-        type:Boolean,
-        //required:true,
-        default: false
+    status:{
+        type:String,
+        enum:["Completed","Pending"],
+        default:"Pending"
     },
     createdAt:{
         type:Date,
         default:Date.now
     }
 });
+
 
 module.exports=mongoose.model("Task",TaskSchema)
